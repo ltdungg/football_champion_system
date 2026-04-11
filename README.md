@@ -39,7 +39,7 @@ A comprehensive system for managing football championships. Allows you to keep t
 ### Quick start
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/football_championship_system.git
+git clone git@github.com:ltdungg/football_champion_system.git
 cd football_championship_system
 ```
 Set up environment variables:
