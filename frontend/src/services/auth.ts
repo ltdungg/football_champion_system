@@ -35,3 +35,23 @@ export const getCurrentUser = async (): Promise<User> => {
   const response = await api.get<User>('/users/me');
   return response.data;
 };
+
+/**
+ * Sends a password reset link to the given email.
+ */
+export const forgotPassword = async (email: string): Promise<{ message: string }> => {
+  const response = await api.post<{ message: string }>('/auth/forgot-password', { email });
+  return response.data;
+};
+
+/**
+ * Resets the password using a token.
+ */
+export const resetPassword = async (token: string, newPassword: string): Promise<{ message: string }> => {
+  const response = await api.post<{ message: string }>('/auth/reset-password', { 
+    token, 
+    new_password: newPassword,
+    confirm_password: newPassword 
+  });
+  return response.data;
+};

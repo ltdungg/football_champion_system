@@ -8,6 +8,8 @@ import Layout from './components/common/Layout';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import TeamsList from './pages/Teams/TeamsList';
 import PlayersList from './pages/Players/PlayersList';
 import StadiumsList from './pages/Stadiums/StadiumsList';
@@ -56,6 +58,8 @@ function App() {
             {/* Public routes */}
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+            <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+            <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
             
             {/* Protected routes */}
             <Route

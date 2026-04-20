@@ -267,3 +267,63 @@ class AuthService:
         )
         self.db.add(audit_log)
         self.db.commit()
+
+    def forgot_password(self, email: str) -> Dict[str, str]:
+        from app.core.security import create_password_reset_token
+        from app.utils.email import send_reset_password_email
+        
+        user = self.user_repository.get_by_email(email)
+        if not user:
+            # For security, do not reveal whether the email exists or not
+            return {"message": "If that email exists in our system, we have sent a password reset link."}
+            
+        token = create_password_reset_token(user.email)
+        send_reset_password_email(user.email, token)
+        
+        self._log_action(
+            user_id=user.id,
+            action="FORGOT_PASSWORD",
+            entity_type="USER",
+            entity_id=user.id,
+            details=f"User {user.username} requested password reset"
+        )
+        
+        return {"message": "If that email exists in our system, we have sent a password reset link."}
+
+    def reset_password(self, token: str, new_password: str) -> Dict[str, str]:
+        from app.core.security import verify_token, get_password_hash
+        
+        payload = verify_token(token)
+        if not payload or payload.get("type") != "password_reset":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid or expired reset token"
+            )
+            
+        email = payload.get("sub")
+        if not email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid reset token"
+            )
+            
+        user = self.user_repository.get_by_email(email)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+            
+        user.password_hash = get_password_hash(new_password)
+        user.updated_at = datetime.utcnow()
+        self.db.commit()
+        
+        self._log_action(
+            user_id=user.id,
+            action="RESET_PASSWORD",
+            entity_type="USER",
+            entity_id=user.id,
+            details=f"User {user.username} successfully reset password"
+        )
+        
+        return {"message": "Password has been successfully reset"}

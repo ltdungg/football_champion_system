@@ -47,7 +47,10 @@ const Login: React.FC = () => {
             <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="Enter your username" required />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+            <div className="flex justify-between items-center mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300">Password</label>
+              <button type="button" onClick={() => navigate('/forgot-password', { state: { email: username } })} className="text-sm font-semibold text-cyan-300 hover:text-white underline decoration-cyan-500 underline-offset-4 transition-all">Forgot password?</button>
+            </div>
             <div className="relative">
               <input type={showPassword ? 'text' : 'password'} id="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 pr-12" placeholder="Enter your password" required />
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300">

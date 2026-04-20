@@ -35,6 +35,16 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     DEBUG: bool = os.getenv("DEBUG", "True").lower() == "true"
     
+    # SMTP / Email settings
+    SMTP_TLS: bool = True
+    SMTP_PORT: Optional[int] = os.getenv("SMTP_PORT")
+    SMTP_HOST: Optional[str] = os.getenv("SMTP_HOST")
+    SMTP_USER: Optional[str] = os.getenv("SMTP_USER")
+    SMTP_PASSWORD: Optional[str] = os.getenv("SMTP_PASSWORD")
+    EMAILS_FROM_EMAIL: Optional[str] = os.getenv("EMAILS_FROM_EMAIL")
+    EMAILS_FROM_NAME: Optional[str] = os.getenv("PROJECT_NAME")
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:8080")
+    
     class Config:
         case_sensitive = True
 

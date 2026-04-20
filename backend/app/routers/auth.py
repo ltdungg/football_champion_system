@@ -38,3 +38,21 @@ async def login(
 @router.post("/logout")
 async def logout():
     return {"message": "Successfully logged out"}
+
+from app.schemas.auth import ResetPasswordRequest, ResetPasswordConfirm
+
+@router.post("/forgot-password")
+async def forgot_password(
+    request: ResetPasswordRequest,
+    db: Session = Depends(get_db)
+):
+    auth_service = AuthService(db)
+    return auth_service.forgot_password(request.email)
+
+@router.post("/reset-password")
+async def reset_password(
+    request: ResetPasswordConfirm,
+    db: Session = Depends(get_db)
+):
+    auth_service = AuthService(db)
+    return auth_service.reset_password(request.token, request.new_password)
