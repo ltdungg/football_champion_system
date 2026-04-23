@@ -41,8 +41,8 @@ class Settings(BaseSettings):
     SMTP_HOST: Optional[str] = os.getenv("SMTP_HOST")
     SMTP_USER: Optional[str] = os.getenv("SMTP_USER")
     SMTP_PASSWORD: Optional[str] = os.getenv("SMTP_PASSWORD")
-    EMAILS_FROM_EMAIL: Optional[str] = os.getenv("EMAILS_FROM_EMAIL")
-    EMAILS_FROM_NAME: Optional[str] = os.getenv("PROJECT_NAME")
+    EMAILS_FROM_EMAIL: str = os.getenv("EMAILS_FROM_EMAIL", "onboarding@resend.dev")
+    EMAILS_FROM_NAME: str = os.getenv("EMAILS_FROM_NAME", "Football Championship System")
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:8080")
     RESEND_API_KEY: Optional[str] = os.getenv("RESEND_API_KEY")
     
