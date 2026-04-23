@@ -45,7 +45,10 @@ class Settings(BaseSettings):
     EMAILS_FROM_NAME: str = os.getenv("EMAILS_FROM_NAME", "Football Championship System")
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:8080")
     RESEND_API_KEY: Optional[str] = os.getenv("RESEND_API_KEY")
-    
+
+    # Gemini AI
+    GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
+
     class Config:
         case_sensitive = True
 

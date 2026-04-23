@@ -5,7 +5,7 @@ from fastapi.responses import RedirectResponse
 from app.core.config import settings
 from app.core.database import engine
 from app.models import Base
-from app.routers import teams, players, stadiums, matches, tickets, auth, reports, users
+from app.routers import teams, players, stadiums, matches, tickets, auth, reports, users, chat
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -39,6 +39,7 @@ app.include_router(matches.router, prefix=f"{api_prefix}/matches", tags=["matche
 app.include_router(tickets.router, prefix=f"{api_prefix}/tickets", tags=["tickets"])
 app.include_router(reports.router, prefix=f"{api_prefix}/reports", tags=["reports"])
 app.include_router(users.router, prefix=f"{api_prefix}/users", tags=["users"])
+app.include_router(chat.router, prefix=f"{api_prefix}/chat", tags=["AI Chat"])
 
 @app.get("/")
 async def root():

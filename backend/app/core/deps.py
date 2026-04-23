@@ -9,6 +9,30 @@ from app.models.user import User
 
 # We use OAuth2PasswordBearer, since this is the standard for JWT With Bearer tokens
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="/api/auth/login", auto_error=False)
+
+def get_current_user_optional(
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme_optional)
+) -> User | None:
+    """Dependency to get current user optionally if token is provided."""
+    if not token:
+        return None
+    payload = verify_token(token)
+    if not payload:
+        return None
+    user_id_str = payload.get("sub")
+    if not user_id_str:
+        return None
+    try:
+        user_id = int(user_id_str)
+        user_repo = UserRepository(db)
+        user = user_repo.get(user_id)
+        if user and user.is_active:
+            return user
+        return None
+    except Exception:
+        return None
 
 def get_current_user(
     db: Session = Depends(get_db),
