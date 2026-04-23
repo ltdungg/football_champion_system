@@ -15,8 +15,6 @@ const SUGGESTED_QUESTIONS = [
   'List all teams in the tournament',
 ];
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-
 const ChatBot: React.FC = () => {
   const { token } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +55,7 @@ const ChatBot: React.FC = () => {
     try {
       const historyPayload = messages.map(m => ({ role: m.role, content: m.content }));
       
-      const res = await fetch(`${API_BASE}/api/chat/ask`, {
+      const res = await fetch(`/api/chat/ask`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
