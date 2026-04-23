@@ -8,6 +8,8 @@ ENV/
 .env
 backend/.env
 backend/app/tests/.pytest_cache/
+id_ed25519
+id_ed25519.pub
 
 # Node / Frontend
 node_modules/

@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     EMAILS_FROM_EMAIL: Optional[str] = os.getenv("EMAILS_FROM_EMAIL")
     EMAILS_FROM_NAME: Optional[str] = os.getenv("PROJECT_NAME")
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:8080")
+    RESEND_API_KEY: Optional[str] = os.getenv("RESEND_API_KEY")
     
     class Config:
         case_sensitive = True
