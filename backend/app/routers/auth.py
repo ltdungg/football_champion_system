@@ -10,7 +10,6 @@ from app.services.auth import AuthService
 
 router = APIRouter()
 
-# --- THIS ENDPOINT WAS NOT ENOUGH ---
 @router.post("/register", response_model=User, status_code=status.HTTP_201_CREATED)
 async def register(
     user_in: UserCreate,
@@ -21,7 +20,6 @@ async def register(
     """
     auth_service = AuthService(db)
     return auth_service.register(user_in)
-# --------------------------------------
 
 @router.post("/login", response_model=LoginResponse)
 async def login(
