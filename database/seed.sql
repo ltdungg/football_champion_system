@@ -104,13 +104,27 @@ INSERT INTO matches (date, home_team_id, away_team_id, stadium_id, status) VALUE
 ('2024-08-11 19:00:00', 9, 10, 10, 'scheduled'),
 ('2024-08-12 19:00:00', 11, 12, 6, 'scheduled'),
 ('2024-08-12 21:30:00', 13, 14, 4, 'scheduled'),
-('2024-08-13 19:00:00', 15, 16, 7, 'scheduled');
+('2024-08-13 19:00:00', 15, 16, 7, 'scheduled'),
+-- Matchday 2
+('2024-08-17 19:00:00', 2, 3, 2, 'scheduled'),
+('2024-08-17 21:30:00', 4, 1, 5, 'scheduled'),
+('2024-08-18 16:00:00', 6, 7, 3, 'scheduled'),
+('2024-08-18 18:30:00', 8, 5, 9, 'scheduled'),
+('2024-08-19 19:00:00', 10, 11, 10, 'scheduled'),
+('2024-08-19 21:30:00', 12, 9, 7, 'scheduled'),
+('2024-08-20 19:00:00', 14, 15, 4, 'scheduled'),
+('2024-08-20 21:30:00', 16, 13, 3, 'scheduled');
 
 -- Several completed matches with results
 INSERT INTO matches (date, home_team_id, away_team_id, stadium_id, home_goals, away_goals, status) VALUES
 ('2024-07-28 19:00:00', 1, 3, 1, 2, 1, 'finished'),
 ('2024-07-29 19:00:00', 2, 4, 2, 1, 0, 'finished'),
-('2024-07-30 19:00:00', 5, 7, 6, 3, 2, 'finished');
+('2024-07-30 19:00:00', 5, 7, 6, 3, 2, 'finished'),
+('2024-07-31 19:00:00', 8, 1, 9, 2, 2, 'finished'),
+('2024-08-01 18:00:00', 6, 2, 3, 0, 3, 'finished'),
+('2024-08-02 20:00:00', 4, 5, 5, 4, 1, 'finished'),
+('2024-08-03 16:00:00', 10, 12, 10, 1, 1, 'finished'),
+('2024-08-04 19:00:00', 15, 13, 7, 3, 0, 'finished');
 
 -- Match tickets
 INSERT INTO tickets (match_id, category, price) VALUES

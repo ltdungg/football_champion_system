@@ -6,6 +6,8 @@ import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
 import PlayerForm from '@/components/forms/PlayerForm';
 import { useDebounce } from '@/hooks/useDebounce';
+import { getTeams } from '@/services/teams';
+import { Team } from '@/types/team';
 
 const POSITION_MAP: Record<PlayerPosition, string> = {
   'GK': 'Goalkeeper',
@@ -18,6 +20,8 @@ const PlayersList: React.FC = () => {
   const [players, setPlayers] = useState<PlayerWithTeam[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterPosition, setFilterPosition] = useState<PlayerPosition | 'all'>('all');
+  const [filterTeam, setFilterTeam] = useState<number | 'all'>('all');
+  const [teams, setTeams] = useState<Team[]>([]);
   const [sortBy, setSortBy] = useState<'first_name' | 'age' | 'jersey_number'>('first_name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   
@@ -38,6 +42,7 @@ const fetchPlayers = async () => {
       limit: 1000,
       search: debouncedSearchTerm || undefined,
       position: filterPosition !== 'all' ? filterPosition : undefined,
+      team_id: filterTeam !== 'all' ? filterTeam : undefined,
     };
     console.log('Fetching players with params:', params); // Add this
     const data = await getPlayers(params);
@@ -53,7 +58,19 @@ const fetchPlayers = async () => {
   
   useEffect(() => {
     fetchPlayers();
-  }, [debouncedSearchTerm, filterPosition]);
+  }, [debouncedSearchTerm, filterPosition, filterTeam]);
+
+  useEffect(() => {
+    const fetchTeamsList = async () => {
+      try {
+        const teamsData = await getTeams({ limit: 100 });
+        setTeams(teamsData);
+      } catch (err) {
+        console.error("Failed to fetch teams:", err);
+      }
+    };
+    fetchTeamsList();
+  }, []);
 
   const handleOpenCreateModal = () => {
     setEditingPlayer(null);
@@ -134,9 +151,21 @@ const fetchPlayers = async () => {
 
         {/* Search and Filter Bar */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-          <div className="flex flex-col lg:flex-row gap-4">
+          <div className="flex flex-col xl:flex-row gap-4">
             <div className="flex-1 relative"><Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" /><input type="text" placeholder="Search players by name..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200" /></div>
-            <div className="flex items-center space-x-3"><Filter className="w-5 h-5 text-gray-500" /><select value={filterPosition} onChange={(e) => setFilterPosition(e.target.value as PlayerPosition | 'all')} className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"><option value="all">All Positions</option>{Object.entries(POSITION_MAP).map(([key, value]) => (<option key={key} value={key}>{value}</option>))}</select><select value={`${sortBy}-${sortOrder}`} onChange={(e) => { const [field, order] = e.target.value.split('-'); setSortBy(field as 'first_name' | 'age' | 'jersey_number'); setSortOrder(order as 'asc' | 'desc'); }} className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"><option value="first_name-asc">Name A-Z</option><option value="first_name-desc">Name Z-A</option><option value="age-desc">Age (Old to Young)</option><option value="age-asc">Age (Young to Old)</option><option value="jersey_number-asc">Jersey #</option></select></div>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center space-x-2">
+                <Filter className="w-5 h-5 text-gray-500" />
+                <select value={filterTeam} onChange={(e) => setFilterTeam(e.target.value === 'all' ? 'all' : Number(e.target.value))} className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                  <option value="all">All Teams</option>
+                  {teams.map((team) => (
+                    <option key={team.id} value={team.id}>{team.name}</option>
+                  ))}
+                </select>
+              </div>
+              <select value={filterPosition} onChange={(e) => setFilterPosition(e.target.value as PlayerPosition | 'all')} className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"><option value="all">All Positions</option>{Object.entries(POSITION_MAP).map(([key, value]) => (<option key={key} value={key}>{value}</option>))}</select>
+              <select value={`${sortBy}-${sortOrder}`} onChange={(e) => { const [field, order] = e.target.value.split('-'); setSortBy(field as 'first_name' | 'age' | 'jersey_number'); setSortOrder(order as 'asc' | 'desc'); }} className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"><option value="first_name-asc">Name A-Z</option><option value="first_name-desc">Name Z-A</option><option value="age-desc">Age (Old to Young)</option><option value="age-asc">Age (Young to Old)</option><option value="jersey_number-asc">Jersey #</option></select>
+            </div>
           </div>
         </div>
         
@@ -159,7 +188,7 @@ const fetchPlayers = async () => {
           </div>
         )}
 
-        {!isLoading && sortedPlayers.length === 0 && <div className="text-center py-12"><UserCheck className="w-16 h-16 text-gray-400 mx-auto mb-4" /><h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No players found</h3><p className="text-gray-500 dark:text-gray-400">{debouncedSearchTerm || filterPosition !== 'all' ? 'Try adjusting your search or filter criteria' : 'Get started by adding your first player'}</p></div>}
+        {!isLoading && sortedPlayers.length === 0 && <div className="text-center py-12"><UserCheck className="w-16 h-16 text-gray-400 mx-auto mb-4" /><h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No players found</h3><p className="text-gray-500 dark:text-gray-400">{debouncedSearchTerm || filterPosition !== 'all' || filterTeam !== 'all' ? 'Try adjusting your search or filter criteria' : 'Get started by adding your first player'}</p></div>}
       </div>
 
       {/* Modal window */}
