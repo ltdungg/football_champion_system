@@ -18,6 +18,8 @@ import TicketCalculator from './pages/Tickets/TicketCalculator';
 import TournamentStandings from './pages/Tournament/TournamentStandings';
 import Reports from './pages/Reports/Reports';
 import Settings from './pages/Settings/Settings';
+import UsersList from './pages/Admin/UsersList';
+import AuditLogsList from './pages/Admin/AuditLogsList';
 
 // Wrapper component for protected routes
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -77,6 +79,8 @@ function App() {
                       <Route path="/tournament" element={<TournamentStandings />} />
                       <Route path="/reports" element={<Reports />} />
                       <Route path="/settings" element={<Settings />} />
+                      <Route path="/admin/users" element={<UsersList />} />
+                      <Route path="/admin/audit-logs" element={<AuditLogsList />} />
                       {/* Redirect to home page for all other paths */}
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
